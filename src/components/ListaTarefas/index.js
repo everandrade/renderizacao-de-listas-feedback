@@ -10,9 +10,11 @@ import {
   LinhaHorizontal
 } from "./styled";
 import bin from "../../assets/bin.png";
+import ListaCompletado from "../listaCompletado";
 
 export function ListaTarefas() {
   const [lista, setLista] = useState(["Fazer exercícios", "Estudar React"]);
+  const [listaConcluida, setListaConcluida] =useState([])
   const [novaTarefa, setNovaTarefa] = useState("");
 
   const onChangeTarefa = (event) => {
@@ -25,8 +27,18 @@ export function ListaTarefas() {
     setNovaTarefa("");
   };
 
+  const adicionaTarefaEnter =(event)=> {
+    if (event.charCode == 13){
+      const novaLista = [...lista, novaTarefa]
+      setLista(novaLista)
+      setNovaTarefa("")
+    }
+  }
+
   const removeTarefa = (tarefa) => {
     const listaFiltrada = lista.filter((item) => item !== tarefa);
+    const novaLista = [...listaConcluida, tarefa]
+    setListaConcluida(novaLista)
     setLista(listaFiltrada);
   };
 
@@ -37,11 +49,13 @@ export function ListaTarefas() {
           placeholder="Digite aqui uma tarefa"
           value={novaTarefa}
           onChange={onChangeTarefa}
+          onKeyPress={adicionaTarefaEnter}
+         
         />
-        <AddTaskButton onClick={adicionaTarefa}>Adicionar</AddTaskButton>
+        <AddTaskButton onClick={adicionaTarefa} id="buttonEnter">Adicionar</AddTaskButton>
       </InputContainer>
       <ListaContainer>
-        <ul>
+        <ul><h2>Tarefas Pendentes</h2>
           {lista.map((tarefa, index) => {
             return (
               <Tarefa key={index}>
@@ -54,6 +68,21 @@ export function ListaTarefas() {
           })}
         </ul>
       </ListaContainer>
+
+      <ListaContainer>
+        <ul><h2>Concluidas</h2>
+          {listaConcluida.map((tarefa, index) => {
+             
+            return(
+              <ListaCompletado key={index}>
+                <p>{tarefa}</p>
+              </ListaCompletado>
+            )
+              
+          })}
+        </ul>
+      </ListaContainer>
+      
       <LinhaHorizontal/>
     </ListaTarefasContainer>
   );
